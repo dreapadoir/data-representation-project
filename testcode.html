@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>COVID-19 Data</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>COVID-19 Data</h1>
+    <div id="jsonData"><table id="dataTable"></table></div>
+
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: 'https://opendata.ecdc.europa.eu/covid19/nationalcasedeath/json/',
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    var table = $('#dataTable');
+                    var addedCountries = {}; // Object to track added countries
+
+                    // Add table header
+                    table.append('<tr><th>Country</th><th>Population</th></tr>');
+
+                    // Loop through the response
+                    $.each(response, function(index, item) {
+                        // Check if the country is already added
+                        if (!addedCountries[item.country]) {
+                            // Add the country and population to the table
+                            table.append('<tr><td>' + item.country + '</td><td>' + item.population + '</td></tr>');
+                            // Mark this country as added
+                            addedCountries[item.country] = true;
+                        }
+                    });
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors
+                    $('#jsonData').text('Error: ' + error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
