@@ -71,6 +71,15 @@ class QuarantineDAO:
         print("update done")
         self.closeAll()
 
+    def update_signout(self, lot, badgeout, dateout, signoutcomment):
+        cursor = self.getCursor()
+        sql = "UPDATE quar SET badgeout = %s, dateout = %s, signoutcomment = %s, status = 0 WHERE lot = %s"
+        values = (badgeout, dateout, signoutcomment, lot)
+        cursor.execute(sql, values)
+        self.connection.commit()
+        self.closeAll()
+
+
 
     def delete(self, lot):
         cursor = self.getCursor()
@@ -81,4 +90,17 @@ class QuarantineDAO:
         print("delete done")
         self.closeAll()
 
+    def getLotsWithStatus(self, status):
+        try:
+            cursor = self.getCursor()
+            # Change the cursor to return dictionaries
+            cursor = self.connection.cursor(dictionary=True)
+            sql = "SELECT * FROM quar WHERE status = %s"
+            cursor.execute(sql, (status,))
+            result = cursor.fetchall()
+            return result
+        except mysql.connector.Error as e:
+            print("Database error:", e)
+        finally:
+            self.closeAll()
 

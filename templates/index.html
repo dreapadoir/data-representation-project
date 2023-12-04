@@ -12,69 +12,67 @@
 
         <!-- Metrics Display -->
         <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="card text-white bg-primary mb-3">
-                    <div class="card-header">Number of Lots in Quarantine</div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ number_of_lots }}</h5>
+            <!-- Metric Block Template -->
+            {% macro metric_block(header, value, card_color) %}
+                <div class="col-md-4">
+                    <div class="card text-white {{ card_color }} mb-3">
+                        <div class="card-header">{{ header }}</div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ value }}</h5>
+                        </div>
                     </div>
                 </div>
-            </div>
-        
-		 <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="card text-white bg-primary mb-3">
-                    <div class="card-header">Average Days in Quarantine</div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ average_days_in_quarantine|round(2) }}</h5>
-                    </div>
-                </div>
-            </div>
-           
-		 <div class="col-md-6">
-    <div class="card text-white bg-warning mb-3">
-        <div class="card-header">Lots in Quarantine Over 7 Days</div>
-        <div class="card-body">
-            <h5 class="card-title">{{ lots_over_7_days }}</h5>
+            {% endmacro %}
+
+            {{ metric_block("Number of Lots in Quarantine", number_of_lots, "bg-primary") }}
+            {{ metric_block("Average Days in Quarantine", average_days_in_quarantine|round(2), "bg-primary") }}
+            {{ metric_block("Number of new lots signed in", lots_signed_in_today_or_since_friday, "bg-success") }}
+            {{ metric_block("Lots in Quarantine Over 7 Days", lots_over_7_days, "bg-warning") }}
         </div>
-    </div>
-</div>
 
-
-
+        <!-- Sign In Button -->
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <a href="{{ url_for('sign_in_lot') }}" class="btn btn-primary">Sign In New Lot</a>
+            </div>
+        </div>
 
         <!-- Quarantine Jobs Table -->
         <div class="row">
-            <div class="col">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Lot</th>
-                            <th>Part</th>
-                            <th>Qty</th>
-                            <th>Date In</th>
-                            <th>Reason</th>
-                            <th>Badge</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for record in records %}
-                        <tr>
-                            <td><a href="{{ url_for('edit_record', lot=record.lot) }}">{{ record.lot }}</a></td>
-                            <td>{{ record.part }}</td>
-                            <td>{{ record.qty }}</td>
-                            <td>{{ record.datein }}</td>
-                            <td>{{ record.reason }}</td>
-                            <td>{{ record.badge }}</td>
-                            <td>{{ 'In Quarantine' if record.status else 'Cleared' }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="col">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Lot</th>
+                    <th>Part</th>
+                    <th>Qty</th>
+                    <th>Date In</th>
+                    <th>Reason</th>
+                    <th>Badge</th>
+                    <th>Status</th>
+                    <th>Actions</th> <!-- Add a new column for actions -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td><a href="{{ url_for('edit_record', lot=record.lot) }}">{{ record.lot }}</a></td>
+                    <td>{{ record.part }}</td>
+                    <td>{{ record.qty }}</td>
+                    <td>{{ record.datein }}</td>
+                    <td>{{ record.reason }}</td>
+                    <td>{{ record.badge }}</td>
+                    <td>{{ 'In Quarantine' if record.status else 'Signed out of Quarantine' }}</td>
+                    <td>
+                        <!-- Add a "Sign Out" button that links to signout.html with the record's lot -->
+                        <a href="{{ url_for('sign_out_lot', lot=record.lot) }}" class="btn btn-danger">Sign Out</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+</div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Out Lot</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Sign Out Lot {{ record.lot }}</h1>
+        <form action="{{ url_for('sign_out_lot', lot=record.lot) }}" method="post">
+            <input type="hidden" name="lot" value="{{ record.lot }}">
+
+            <div class="form-group">
+                <label for="part">Part</label>
+                <input type="text" class="form-control" id="part" name="part" value="{{ record.part }}" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="qty">Qty</label>
+                <input type="number" class="form-control" id="qty" name="qty" value="{{ record.qty }}" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="datein">Date In</label>
+                <input type="text" class="form-control" id="datein" name="datein" value="{{ record.datein }}" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="reason">Reason</label>
+                <input type="text" class="form-control" id="reason" name="reason" value="{{ record.reason }}" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="badgeout">Badge Out</label>
+                <input type="number" class="form-control" id="badgeout" name="badgeout" value="{{ record.badgeout }}">
+            </div>
+
+            <div class="form-group">
+                <label for="dateout">Date Out</label>
+                <input type="date" class="form-control" id="dateout" name="dateout" value="{{ record.dateout }}">
+            </div>
+
+            <div class="form-group">
+                <label for="signoutcomment">Sign Out Comment</label>
+                <input type="text" class="form-control" id="signoutcomment" name="signoutcomment" value="{{ record.signoutcomment }}">
+            </div>
+
+            <button type="submit" class="btn btn-danger">Sign Out Lot</button>
+        </form>
+    </div>
+
+    <!-- Include Bootstrap JS (optional) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

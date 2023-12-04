@@ -7,42 +7,60 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1 class="mt-4">Edit Lot</h1>
+    <div class="container mt-4">
+        <h1>Edit Lot</h1>
         <form action="{{ url_for('edit_record', lot=record.lot) }}" method="post">
 
+            <!-- Lot Number -->
             <div class="form-group">
                 <label for="lot">Lot Number</label>
                 <input type="text" class="form-control" id="lot" name="lot" value="{{ record.lot }}" readonly>
             </div>
 
+            <!-- Part -->
             <div class="form-group">
                 <label for="part">Part</label>
                 <input type="text" class="form-control" id="part" name="part" value="{{ record.part }}" required>
             </div>
 
+            <!-- Quantity -->
             <div class="form-group">
                 <label for="qty">Quantity</label>
                 <input type="number" class="form-control" id="qty" name="qty" value="{{ record.qty }}" required>
             </div>
 
+            <!-- Date In -->
             <div class="form-group">
-				<label for="datein">Date In</label>
-				<input type="date" class="form-control" id="datein" name="datein" value="{{ record.datein.strftime('%Y-%m-%d') }}" required>
-			</div>
+                <label for="datein">Date In</label>
+                <input type="date" class="form-control" id="datein" name="datein" value="{{ record.datein.strftime('%Y-%m-%d') }}" required>
+            </div>
 
+            <!-- Reason for Quarantine -->
             <div class="form-group">
                 <label for="reason">Reason for Quarantine</label>
                 <input type="text" class="form-control" id="reason" name="reason" value="{{ record.reason }}" required>
             </div>
 
+            <!-- Badge Number -->
             <div class="form-group">
                 <label for="badge">Badge Number</label>
                 <input type="number" class="form-control" id="badge" name="badge" value="{{ record.badge }}" required>
             </div>
 
+            <!-- Update Button -->
             <button type="submit" class="btn btn-primary">Update Lot</button>
+
         </form>
+        
+        <div class="d-flex mt-3">
+            <!-- Delete Lot Button -->
+            <form action="{{ url_for('delete_record', lot=record.lot) }}" method="post">
+                <button type="submit" class="btn btn-danger mr-2">Delete Lot</button>
+            </form>
+
+            <!-- Cancel Button (Link to Index) -->
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
