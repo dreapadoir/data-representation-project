@@ -39,11 +39,12 @@ class QuarantineDAO:
     def getAll(self):
         try:
             cursor = self.getCursor()
+            # Change the cursor to return dictionaries
+            cursor = self.connection.cursor(dictionary=True)
             sql = "SELECT * FROM quar"
             cursor.execute(sql)
             result = cursor.fetchall()
-            #for x in result:
-               #print(x[1])     
+           
             return result  # Ensure we're returning the fetched data
             
         except mysql.connector.Error as e:
@@ -79,5 +80,3 @@ class QuarantineDAO:
         self.closeAll()
 
 
-quarantineDAO = QuarantineDAO()
-quarantineDAO.getAll()

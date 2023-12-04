@@ -20,7 +20,28 @@
                     </div>
                 </div>
             </div>
-            
+        
+		 <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">Average Days in Quarantine</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ average_days_in_quarantine|round(2) }}</h5>
+                    </div>
+                </div>
+            </div>
+           
+		 <div class="col-md-6">
+    <div class="card text-white bg-warning mb-3">
+        <div class="card-header">Lots in Quarantine Over 7 Days</div>
+        <div class="card-body">
+            <h5 class="card-title">{{ lots_over_7_days }}</h5>
+        </div>
+    </div>
+</div>
+
+
+
 
         <!-- Quarantine Jobs Table -->
         <div class="row">
@@ -40,13 +61,13 @@
                     <tbody>
                         {% for record in records %}
                         <tr>
-                            <td>{{ record[0] }}</td>
-                            <td>{{ record[1] }}</td>
-                            <td>{{ record[2] }}</td>
-                            <td>{{ record[3] }}</td>
-                            <td>{{ record[4] }}</td>
-                            <td>{{ record[5] }}</td>
-                            <td>{{ 'In Quarantine' if record[8] else 'Cleared' }}</td>
+                            <td>{{ record.lot }}</td>
+                            <td>{{ record.part }}</td>
+                            <td>{{ record.qty }}</td>
+                            <td>{{ record.datein }}</td>
+                            <td>{{ record.reason }}</td>
+                            <td>{{ record.badge }}</td>
+                            <td>{{ 'In Quarantine' if record.status else 'Cleared' }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
