@@ -6,9 +6,16 @@ app = Flask(__name__)
 # Route to view records
 @app.route('/')
 def index():
-    dao = quarantineDAO.QuarantineDAO()
-    records = dao.getAll()
-    return render_template('index.html', records=records)
+    try:
+        records = quarantineDAO.getAll()
+        if records is None:
+            records = []  # Make sure records is a list
+        # ... calculations for metrics ...
+        return render_template('index.html', records=records, number_of_lots=number_of_lots, average_days_in_quarantine=average_days_in_quarantine)
+    except Exception as e:
+        print("An error occurred:", e)
+        return render_template('index.html', records=[], number_of_lots=0, average_days_in_quarantine=0)
+
 
 # Route to add a record
 @app.route('/add', methods=['POST'])
