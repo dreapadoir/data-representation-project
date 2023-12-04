@@ -1,0 +1,14 @@
+/* Style for the navbar brand (navbar-brand) */
+.navbar-brand {
+    font-size: 24px; /* Adjust the font size as needed */
+    font-family: Arial, sans-serif; /* Specify the desired font family */
+    color: #ffffff; /* Specify the desired text color */
+    text-decoration: none; /* Remove underlines from links */
+}
+
+/* Style for the weather information div (weather-info) */
+.weather-info {
+    font-size: 16px; /* Adjust the font size as needed */
+    font-family: Arial, sans-serif; /* Specify the desired font family */
+    color: #ffffff; /* Specify the desired text color */
+}

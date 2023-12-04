@@ -3,6 +3,7 @@ from flask_bcrypt import Bcrypt
 from flask_httpauth import HTTPBasicAuth
 from quarantineDAO import QuarantineDAO  # Ensure this matches the name of your DAO file
 from datetime import datetime, timedelta
+import requests
 
 
 app = Flask(__name__)
@@ -20,7 +21,7 @@ def verify_password(username, password):
     if username in users and bcrypt.check_password_hash(users.get(username), password):
         return username
 
-
+    
 def count_lots_signed_out_last_2_days(records):
     today = datetime.now().date()
     weekday = today.weekday()
@@ -280,6 +281,32 @@ def login():
         return redirect(url_for('protected'))
     else:
         return 'Login failed. Please try again.'
+    
+@app.route('/get_weather_data')
+def get_weather_data():
+    latitude = 47.6062  # Use the correct latitude for your location
+    longitude = -122.3321  # Use the correct longitude for your location
+    endpoint = 'https://api.open-meteo.com/v1/forecast'
+    params = {
+        'latitude': latitude,
+        'longitude': longitude,
+        'current_weather': True
+    }
+    
+    try:
+        response = requests.get(endpoint, params=params, verify=False)
+        response.raise_for_status()
+        weather_data = response.json()
+        current_temperature = weather_data['current_weather']['temperature']
+        return jsonify({'current_temperature': current_temperature})
+    except requests.HTTPError as http_err:
+        print(f'HTTP error occurred: {http_err}')
+        return jsonify({'error': 'Error fetching weather data'}), 500
+    except Exception as err:
+        print(f'Other error occurred: {err}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+
+
 
 
 if __name__ == '__main__':
