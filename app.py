@@ -194,13 +194,6 @@ def search_records():
 
     return render_template('search.html', search_results=[])
 
-# @app.route('/view_record/<int:lot>')
-# def view_record(lot):
-#     # Retrieve the record details by lot number from the database
-#     # You can use your QuarantineDAO class to fetch the record details
-#     record = dao.findByID(lot)
-
-#     return render_template('record_details.html', record=record)
 
 @app.route('/view_record/<int:lot>', methods=['GET'])
 def view_record(lot):
@@ -212,21 +205,7 @@ def view_record(lot):
         print("An error occurred:", e)
         return render_template('record_details.html', record={}, operator_data={})
 
-@app.route('/quarantine_map')
-def quarantine_map():
-    return render_template('quarantine_map.html')
 
-
-# @app.route('/api/buildings')
-# def get_buildings():
-#     # Here you would query your database for the buildings
-#     # For now, we'll return a hardcoded list of buildings
-#     buildings = [
-#         {'name': 'B1', 'lat': 47.929246, 'lon': -122.275260, 'lots': 10, 'parts': 50},
-#         {'name': 'B3', 'lat': 47.929156, 'lon': -122.269902, 'lots': 5, 'parts': 25},
-#         {'name': 'B6', 'lat': 47.925021, 'lon': -122.272193, 'lots': 8, 'parts': 30}
-#     ]
-#     return jsonify(buildings)
 
 @app.route('/api/buildings')
 def get_buildings():
