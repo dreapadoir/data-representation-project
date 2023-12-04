@@ -29,6 +29,7 @@ python app.py
 ## Usage
 - The map will display markers for different buildings.
 - Click on a marker to view information about the building, including lots in quarantine and quantity of parts in quarantine.
+- Login credentials are username and password
 
 ## Project Structure
 The project is structured as follows:
