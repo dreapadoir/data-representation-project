@@ -130,20 +130,21 @@ class QuarantineDAO:
             finally:
                 self.closeAll()
 
-    def get_building_data(self):
+    def get_building_data(self, building_name=None):
         cursor = self.getCursor()
         cursor = self.connection.cursor(dictionary=True)
         query = """
         SELECT building, COUNT(lot) as lot_count, SUM(qty) as total_qty
         FROM quar
-        WHERE building IN ('B1', 'B3', 'B6')
-        GROUP BY building
         """
+        if building_name:
+            query += f"WHERE building = '{building_name}'"
+        query += " GROUP BY building"
+
         cursor.execute(query)
         result_set = cursor.fetchall()
         buildings_data = [
-        {'name': row['building'], 'lot_count': row['lot_count'], 'total_qty': row['total_qty']}
-        for row in result_set]
-        
+            {'name': row['building'], 'lot_count': row['lot_count'], 'total_qty': row['total_qty']}
+            for row in result_set]
+
         return buildings_data
-        self.closeAll()
