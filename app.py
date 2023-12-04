@@ -63,11 +63,45 @@ def index():
                                average_days_in_quarantine=0, lots_over_7_days=0)
 
 
-# Route to edit a record
-@app.route('/edit/<int:id>', methods=['GET', 'POST'])
-def edit_record(id):
-    # Handle record editing
-    return render_template('edit.html')
+@app.route('/signin', methods=['GET', 'POST'])
+def sign_in_lot():
+    if request.method == 'POST':
+        # Extract data from form
+        lot = request.form['lot']
+        part = request.form['part']
+        qty = request.form['qty']
+        datein = request.form['datein']
+        reason = request.form['reason']
+        badge = request.form['badge']
+
+        # Convert datein to a datetime object
+        datein = datetime.strptime(datein, '%Y-%m-%d').date()
+
+        # Create a new record in the database
+        new_id = dao.create((lot, part, qty, datein, reason, badge, None, None, True, None))
+        return redirect(url_for('index'))  # Redirect to the index page after form submission
+    return render_template('signin.html')
+
+@app.route('/edit/<int:lot>', methods=['GET', 'POST'])
+def edit_record(lot):
+    if request.method == 'POST':
+        # Extract data from form and update the record
+        updated_values = {
+            'lot': lot,
+            'part': request.form['part'],
+            'qty': request.form['qty'],
+            'datein': request.form['datein'],
+            'reason': request.form['reason'],
+            'badge': request.form['badge']
+            # Add other fields as necessary
+        }
+        dao.update(updated_values)
+        return redirect(url_for('index'))
+    else:
+        # For a GET request, find the record by lot and render the edit page
+        record = dao.findByID(lot)
+        return render_template('edit.html', record=record)
+
 
 # Route to delete a record
 @app.route('/delete/<int:id>')

@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Quarantine Lot</title>
+    <title>Edit Lot</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <h1 class="mt-4">Edit Quarantine Lot</h1>
+        <h1 class="mt-4">Edit Lot</h1>
+        <form action="{{ url_for('edit_record', lot=record.lot) }}" method="post">
 
-        <!-- Edit Form -->
-        <form method="POST">
             <div class="form-group">
                 <label for="lot">Lot Number</label>
                 <input type="text" class="form-control" id="lot" name="lot" value="{{ record.lot }}" readonly>
@@ -19,30 +18,30 @@
 
             <div class="form-group">
                 <label for="part">Part</label>
-                <input type="text" class="form-control" id="part" name="part" value="{{ record.part }}">
+                <input type="text" class="form-control" id="part" name="part" value="{{ record.part }}" required>
             </div>
 
             <div class="form-group">
                 <label for="qty">Quantity</label>
-                <input type="number" class="form-control" id="qty" name="qty" value="{{ record.qty }}">
+                <input type="number" class="form-control" id="qty" name="qty" value="{{ record.qty }}" required>
             </div>
 
             <div class="form-group">
-                <label for="datein">Date In</label>
-                <input type="date" class="form-control" id="datein" name="datein" value="{{ record.datein }}">
+				<label for="datein">Date In</label>
+				<input type="date" class="form-control" id="datein" name="datein" value="{{ record.datein.strftime('%Y-%m-%d') }}" required>
+			</div>
+
+            <div class="form-group">
+                <label for="reason">Reason for Quarantine</label>
+                <input type="text" class="form-control" id="reason" name="reason" value="{{ record.reason }}" required>
             </div>
 
             <div class="form-group">
-                <label for="reason">Reason</label>
-                <input type="text" class="form-control" id="reason" name="reason" value="{{ record.reason }}">
+                <label for="badge">Badge Number</label>
+                <input type="number" class="form-control" id="badge" name="badge" value="{{ record.badge }}" required>
             </div>
 
-            <div class="form-group">
-                <label for="badge">Badge</label>
-                <input type="number" class="form-control" id="badge" name="badge" value="{{ record.badge }}">
-            </div>
-
-            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="submit" class="btn btn-primary">Update Lot</button>
         </form>
     </div>
 

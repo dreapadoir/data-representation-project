@@ -54,12 +54,13 @@ class QuarantineDAO:
 
     def findByID(self, lot):
         cursor = self.getCursor()
-        sql="select * from quar where id = %s"
+        cursor = self.connection.cursor(dictionary=True)
+        sql="select * from quar where lot = %s"
         values = (lot,)
 
         cursor.execute(sql, values)
         result = cursor.fetchone()
-        print(result)
+        return result
         self.closeAll()
 
     def update(self, values):

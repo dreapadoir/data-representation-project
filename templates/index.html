@@ -61,7 +61,7 @@
                     <tbody>
                         {% for record in records %}
                         <tr>
-                            <td>{{ record.lot }}</td>
+                            <td><a href="{{ url_for('edit_record', lot=record.lot) }}">{{ record.lot }}</a></td>
                             <td>{{ record.part }}</td>
                             <td>{{ record.qty }}</td>
                             <td>{{ record.datein }}</td>
