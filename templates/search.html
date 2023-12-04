@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Database</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Search Database</h1>
+        <form action="{{ url_for('search_records') }}" method="POST">
+            <div class="form-group">
+                <input type="text" class="form-control" name="search_query" placeholder="Enter search query">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        <table class="table table-striped mt-4">
+            <thead>
+                <tr>
+                    <th>Lot Number</th>
+                    <th>Part</th>
+                    <th>Qty</th>
+                    <th>Date In</th>
+                    <!-- Add other table headers as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in search_results %}
+                    <tr>
+                        <td><a href="{{ url_for('view_record', lot=record.lot) }}">{{ record.lot }}</a></td>
+                        <td>{{ record.part }}</td>
+                        <td>{{ record.qty }}</td>
+                        <td>{{ record.datein }}</td>
+                        <!-- Add other table cells as needed -->
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- Include Bootstrap JS and other necessary scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	
+</body>
+</html>

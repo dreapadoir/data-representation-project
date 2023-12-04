@@ -6,6 +6,44 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 dao = QuarantineDAO()
 
+def calculate_average_days_for_status1(records):
+    total_days = 0
+    count = 0
+    for record in records:
+        if record['datein'] and record['status'] == 1:
+            date_in = record['datein']
+            # Calculate the difference only for lots with status 1
+            delta = datetime.now().date() - date_in
+            total_days += delta.days
+            count += 1
+    return total_days / count if count > 0 else 0
+
+def count_new_lots_signed_in(records):
+    today = datetime.now().date()
+    weekday = today.weekday()
+
+    if weekday == 0:
+        start_date = today - timedelta(days=3)
+    else:
+        start_date = today - timedelta(days=1)
+
+    count = 0
+    for record in records:
+        if record['datein']:
+            date_in = record['datein']
+            if date_in >= start_date:
+                count += 1
+    return count
+
+def count_lots_over_7_days_for_status1(records, days=7):
+    count = 0
+    for record in records:
+        if record['datein'] and record['status'] == 1:
+            delta = datetime.now().date() - record['datein']
+            if delta.days > days:
+                count += 1
+    return count
+
 def count_lots_signed_in(records):
     today = datetime.now().date()
     weekday = today.weekday()  # Get the current day of the week (0 = Monday, 6 = Sunday)
@@ -52,21 +90,23 @@ def count_lots_over_days(records, days=7):
 @app.route('/')
 def index():
     try:
-        records = dao.getLotsWithStatus(1)  # Modify this line to retrieve lots with status 1
-        number_of_lots = len(records) if records else 0
-        average_days_in_quarantine = calculate_average_days(records)
-        lots_over_7_days = count_lots_over_days(records, 7)
-        lots_signed_in_today_or_since_friday = count_lots_signed_in(records)
+        records = dao.getAll()
+        number_of_lots = len([record for record in records if record['status'] == 1])
+
+        average_days_in_quarantine = calculate_average_days_for_status1(records)
+        new_lots_signed_in = count_new_lots_signed_in(records)
+        lots_over_7_days = count_lots_over_7_days_for_status1(records, 7)
 
         return render_template('index.html', records=records, number_of_lots=number_of_lots,
                                average_days_in_quarantine=average_days_in_quarantine,
-                               lots_over_7_days=lots_over_7_days,
-                               lots_signed_in_today_or_since_friday=lots_signed_in_today_or_since_friday)
+                               new_lots_signed_in=new_lots_signed_in,
+                               lots_over_7_days=lots_over_7_days)
     except Exception as e:
         print("An error occurred:", e)
         return render_template('index.html', records=[], number_of_lots=0,
-                               average_days_in_quarantine=0, lots_over_7_days=0,
-                               lots_signed_in_today_or_since_friday=0)
+                               average_days_in_quarantine=0, new_lots_signed_in=0,
+                               lots_over_7_days=0)
+
 
 
 
@@ -138,6 +178,39 @@ def sign_out_lot(lot):
     record = dao.findByID(lot)
     return render_template('signout.html', record=record)
 
+@app.route('/search', methods=['GET', 'POST'])
+def search_records():
+    if request.method == 'POST':
+        search_query = request.form.get('search_query')
+
+        # Perform a database query to search for records based on the search query
+        # You can use SQL queries or any other search mechanism here
+
+        # For example, you can use your QuarantineDAO class to perform the search
+        # Replace this with your actual search logic
+        search_results = dao.search_records(search_query)
+
+        return render_template('search.html', search_results=search_results)
+
+    return render_template('search.html', search_results=[])
+
+# @app.route('/view_record/<int:lot>')
+# def view_record(lot):
+#     # Retrieve the record details by lot number from the database
+#     # You can use your QuarantineDAO class to fetch the record details
+#     record = dao.findByID(lot)
+
+#     return render_template('record_details.html', record=record)
+
+@app.route('/view_record/<int:lot>', methods=['GET'])
+def view_record(lot):
+    try:
+        record = dao.findByID(lot)
+        operator_data = dao.get_operator_data()  # Fetch operator data
+        return render_template('record_details.html', record=record, operator_data=operator_data)
+    except Exception as e:
+        print("An error occurred:", e)
+        return render_template('record_details.html', record={}, operator_data={})
 
 
 

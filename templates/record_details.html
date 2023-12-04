@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record Details</title>
+    <!-- Include Bootstrap CSS and any other necessary libraries -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Record Details</h1>
+        <table class="table table-bordered">
+            <tr>
+                <th class="w-25">Lot Number</th>
+                <td>{{ record.lot }}</td>
+                <th class="w-25">Part</th>
+                <td>{{ record.part }}</td>
+            </tr>
+            <tr>
+                <th>Qty</th>
+                <td>{{ record.qty }}</td>
+                <th>Date In</th>
+                <td>{{ record.datein }}</td>
+            </tr>
+            <tr>
+    <th>Reason</th>
+    <td>{{ record.reason }}</td>
+    <th>Signed in by</th>
+    <td>
+        {% if record.status == 1 %}
+            {{ operator_data[record.badge] if operator_data.get(record.badge) else record.badge }}
+        {% else %}
+            {{ record.badge }}
+        {% endif %}
+    </td>
+</tr>
+<tr>
+    <th>Signed out by</th>
+    <td>
+        {% if record.status == 0 %}
+            {{ operator_data[record.badgeout] if operator_data.get(record.badgeout) else record.badgeout }}
+        {% else %}
+            {{ record.badgeout }}
+        {% endif %}
+    </td>
+    <th>Date Out</th>
+    <td>{{ record.dateout }}</td>
+</tr>
+            <tr>
+                <th>Status</th>
+                <td>
+                    {% if record.status == 1 %}
+                        In Quarantine
+                    {% else %}
+                        Signed out of Quarantine
+                    {% endif %}
+                </td>
+                <th>Sign Out Comment</th>
+                <td>{{ record.signoutcomment }}</td>
+            </tr>
+        </table>
+    </div>
+    <!-- Include Bootstrap JS and other necessary scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
