@@ -1,10 +1,25 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask_bcrypt import Bcrypt
+from flask_httpauth import HTTPBasicAuth
 from quarantineDAO import QuarantineDAO  # Ensure this matches the name of your DAO file
 from datetime import datetime, timedelta
 
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
+auth = HTTPBasicAuth()
+
+users = {
+    'username': bcrypt.generate_password_hash('password').decode('utf-8')
+}
+
 dao = QuarantineDAO()
+
+@auth.verify_password
+def verify_password(username, password):
+    if username in users and bcrypt.check_password_hash(users.get(username), password):
+        return username
+
 
 def count_lots_signed_out_last_2_days(records):
     today = datetime.now().date()
@@ -106,6 +121,8 @@ def count_lots_over_days(records, days=7):
 
 
 @app.route('/')
+@auth.login_required
+
 def index():
     try:
         records = dao.getAll()
@@ -253,6 +270,17 @@ def get_buildings():
         buildings.append(building_info)
 
     return jsonify(buildings)
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+
+    if verify_password(username, password):
+        return redirect(url_for('protected'))
+    else:
+        return 'Login failed. Please try again.'
+
 
 if __name__ == '__main__':
     app.run(debug=True)
