@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quarantine Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4">Quarantine Dashboard</h1>
+
+        <!-- Metrics Display -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">Number of Lots in Quarantine</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ number_of_lots }}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-header">Average Days in Quarantine</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ average_days_in_quarantine }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quarantine Jobs Table -->
+        <div class="row">
+            <div class="col">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Lot</th>
+                            <th>Part</th>
+                            <th>Qty</th>
+                            <th>Date In</th>
+                            <th>Reason</th>
+                            <th>Badge</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in records %}
+                        <tr>
+                            <td>{{ record.lot }}</td>
+                            <td>{{ record.part }}</td>
+                            <td>{{ record.qty }}</td>
+                            <td>{{ record.datein }}</td>
+                            <td>{{ record.reason }}</td>
+                            <td>{{ record.badge }}</td>
+                            <td>{{ 'In Quarantine' if record.status else 'Cleared' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
