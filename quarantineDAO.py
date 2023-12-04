@@ -115,17 +115,17 @@ class QuarantineDAO:
         self.closeAll()
         return search_results
 
-def get_operator_data(self):
-        try:
-            cursor = self.getCursor()
-            # Change the cursor to return dictionaries
-            cursor = self.connection.cursor(dictionary=True)
-            sql = "SELECT * FROM operator"
-            cursor.execute(sql)
-            result = cursor.fetchall()
-            operator_data = {record['badge']: record['operatorname'] for record in result}
-            return operator_data
-        except mysql.connector.Error as e:
-            print("Database error:", e)
-        finally:
-            self.closeAll()
+    def get_operator_data(self):
+            try:
+                cursor = self.getCursor()
+                # Change the cursor to return dictionaries
+                cursor = self.connection.cursor(dictionary=True)
+                sql = "SELECT * FROM operator"
+                cursor.execute(sql)
+                result = cursor.fetchall()
+                operator_data = {record['badge']: record['operatorname'] for record in result}
+                return operator_data
+            except mysql.connector.Error as e:
+                print("Database error:", e)
+            finally:
+                self.closeAll()
