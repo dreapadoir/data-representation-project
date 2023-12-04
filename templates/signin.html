@@ -7,6 +7,11 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('index') }}">Boeing Quarantine Management</a>
+    </div>
+</nav>
     <div class="container">
         <h1 class="mt-4">Sign In New Lot</h1>
         <form action="{{ url_for('sign_in_lot') }}" method="post">

@@ -6,6 +6,24 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 dao = QuarantineDAO()
 
+def count_lots_signed_out_last_2_days(records):
+    today = datetime.now().date()
+    weekday = today.weekday()
+
+    # Include Friday if today is Monday
+    if weekday == 0:
+        start_date = today - timedelta(days=3)
+    else:
+        start_date = today - timedelta(days=1)
+
+    count = 0
+    for record in records:
+        if record['dateout']:
+            date_out = record['dateout']
+            if start_date <= date_out <= today:
+                count += 1
+    return count
+
 def calculate_average_days_for_status1(records):
     total_days = 0
     count = 0
@@ -96,11 +114,15 @@ def index():
         average_days_in_quarantine = calculate_average_days_for_status1(records)
         new_lots_signed_in = count_new_lots_signed_in(records)
         lots_over_7_days = count_lots_over_7_days_for_status1(records, 7)
+        total_parts_in_quarantine = sum(record['qty'] for record in records if record['status'] == 1)
+        lots_signed_out_last_2_days = count_lots_signed_out_last_2_days(records)
 
         return render_template('index.html', records=records, number_of_lots=number_of_lots,
                                average_days_in_quarantine=average_days_in_quarantine,
                                new_lots_signed_in=new_lots_signed_in,
-                               lots_over_7_days=lots_over_7_days)
+                               lots_over_7_days=lots_over_7_days,
+                               total_parts_in_quarantine=total_parts_in_quarantine,
+                               lots_signed_out_last_2_days=lots_signed_out_last_2_days)
     except Exception as e:
         print("An error occurred:", e)
         return render_template('index.html', records=[], number_of_lots=0,
