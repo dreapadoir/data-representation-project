@@ -37,14 +37,16 @@ class QuarantineDAO:
         return newid
     
     def getAll(self):
-        cursor = self.getCursor()
-        sql="select * from quar"
-
-        cursor.execute(sql)
-        result = cursor.fetchall()
-        for x in result:
-            print(x)
-        self.closeAll()
+        try:
+            cursor = self.getCursor()
+            sql = "SELECT * FROM quar"
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            return result  # Ensure we're returning the fetched data
+        except mysql.connector.Error as e:
+            print("Database error:", e)  # Print out the error if any
+        finally:
+            self.closeAll()
 
     def findByID(self, lot):
         cursor = self.getCursor()
