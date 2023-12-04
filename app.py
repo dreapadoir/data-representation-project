@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for
-import quarantineDAO  # Ensure this matches the name of your DAO file
+from quarantineDAO import QuarantineDAO  # Ensure this matches the name of your DAO file
 
 app = Flask(__name__)
-
+dao = QuarantineDAO()
 # Route to view records
 @app.route('/')
 def index():
     try:
-        records = quarantineDAO.getAll()
+        records = dao.getAll()
         if records is None:
             records = []  # Make sure records is a list
         # ... calculations for metrics ...
@@ -32,7 +32,7 @@ def edit_record(id):
 # Route to delete a record
 @app.route('/delete/<int:id>')
 def delete_record(id):
-    dao = quarantineDAO.QuarantineDAO()
+    dao = dao.QuarantineDAO()
     dao.delete(id)
     return redirect(url_for('index'))
 
