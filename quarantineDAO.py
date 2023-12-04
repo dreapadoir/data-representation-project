@@ -42,7 +42,10 @@ class QuarantineDAO:
             sql = "SELECT * FROM quar"
             cursor.execute(sql)
             result = cursor.fetchall()
+            #for x in result:
+               #print(x[1])     
             return result  # Ensure we're returning the fetched data
+            
         except mysql.connector.Error as e:
             print("Database error:", e)  # Print out the error if any
         finally:
@@ -77,3 +80,4 @@ class QuarantineDAO:
 
 
 quarantineDAO = QuarantineDAO()
+quarantineDAO.getAll()

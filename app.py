@@ -4,17 +4,20 @@ from quarantineDAO import QuarantineDAO  # Ensure this matches the name of your 
 app = Flask(__name__)
 dao = QuarantineDAO()
 # Route to view records
+
 @app.route('/')
 def index():
     try:
         records = dao.getAll()
-        if records is None:
-            records = []  # Make sure records is a list
-        # ... calculations for metrics ...
-        return render_template('index.html', records=records, number_of_lots=number_of_lots, average_days_in_quarantine=average_days_in_quarantine)
+        number_of_lots = len(records) if records else 0
+        # For average_days_in_quarantine, you'll need to calculate the average
+        # based on the 'datein' field of each record and today's date.
+        
+        return render_template('index.html', records=records, number_of_lots=number_of_lots)
     except Exception as e:
         print("An error occurred:", e)
-        return render_template('index.html', records=[], number_of_lots=0, average_days_in_quarantine=0)
+        return render_template('index.html', records=[], number_of_lots=0)
+
 
 
 # Route to add a record
