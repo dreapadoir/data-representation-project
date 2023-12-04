@@ -65,11 +65,12 @@ class QuarantineDAO:
 
     def update(self, values):
         cursor = self.getCursor()
-        sql = "update quar set badgeout = %s, dateout = %s, status = %s, signoutcomment = %s where lot = %s"
-        cursor.execute(sql, values)
+        sql = "update quar set part = %s, qty = %s, datein = %s, reason = %s, badge = %s where lot = %s"
+        cursor.execute(sql, (values['part'], values['qty'], values['datein'], values['reason'], values['badge'], values['lot']))
         self.connection.commit()
         print("update done")
         self.closeAll()
+
 
     def delete(self, lot):
         cursor = self.getCursor()
