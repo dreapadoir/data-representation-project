@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from quarantineDAO import QuarantineDAO  # Ensure this matches the name of your DAO file
 from datetime import datetime, timedelta
 
@@ -211,6 +211,47 @@ def view_record(lot):
     except Exception as e:
         print("An error occurred:", e)
         return render_template('record_details.html', record={}, operator_data={})
+
+@app.route('/quarantine_map')
+def quarantine_map():
+    return render_template('quarantine_map.html')
+
+
+# @app.route('/api/buildings')
+# def get_buildings():
+#     # Here you would query your database for the buildings
+#     # For now, we'll return a hardcoded list of buildings
+#     buildings = [
+#         {'name': 'B1', 'lat': 47.929246, 'lon': -122.275260, 'lots': 10, 'parts': 50},
+#         {'name': 'B3', 'lat': 47.929156, 'lon': -122.269902, 'lots': 5, 'parts': 25},
+#         {'name': 'B6', 'lat': 47.925021, 'lon': -122.272193, 'lots': 8, 'parts': 30}
+#     ]
+#     return jsonify(buildings)
+
+@app.route('/api/buildings')
+def get_buildings():
+    # Query the database using the DAO to get the sum of quantities and count of lots for each building
+    buildings_data = dao.get_building_data()  # This is a new method you would create in your DAO
+
+    # Map the buildings to their static lat/lon values
+    static_locations = {
+        'B1': {'lat': 47.929246, 'lon': -122.275260},
+        'B3': {'lat': 47.929156, 'lon': -122.269902},
+        'B6': {'lat': 47.925021, 'lon': -122.272193}
+    }
+
+    # Combine the data from the DAO with the static location data
+    buildings = []
+    for building in buildings_data:
+        building_info = static_locations.get(building['name'], {})
+        building_info.update({
+            'name': building['name'],
+            'lots': building['lot_count'],
+            'parts': building['total_qty']
+        })
+        buildings.append(building_info)
+
+    return jsonify(buildings)
 
 
 
