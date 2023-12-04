@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Quarantine Lot</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4">Edit Quarantine Lot</h1>
+
+        <!-- Edit Form -->
+        <form method="POST">
+            <div class="form-group">
+                <label for="lot">Lot Number</label>
+                <input type="text" class="form-control" id="lot" name="lot" value="{{ record.lot }}" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="part">Part</label>
+                <input type="text" class="form-control" id="part" name="part" value="{{ record.part }}">
+            </div>
+
+            <div class="form-group">
+                <label for="qty">Quantity</label>
+                <input type="number" class="form-control" id="qty" name="qty" value="{{ record.qty }}">
+            </div>
+
+            <div class="form-group">
+                <label for="datein">Date In</label>
+                <input type="date" class="form-control" id="datein" name="datein" value="{{ record.datein }}">
+            </div>
+
+            <div class="form-group">
+                <label for="reason">Reason</label>
+                <input type="text" class="form-control" id="reason" name="reason" value="{{ record.reason }}">
+            </div>
+
+            <div class="form-group">
+                <label for="badge">Badge</label>
+                <input type="number" class="form-control" id="badge" name="badge" value="{{ record.badge }}">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
