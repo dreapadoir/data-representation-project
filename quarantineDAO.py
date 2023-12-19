@@ -39,16 +39,15 @@ class QuarantineDAO:
     def getAll(self):
         try:
             cursor = self.getCursor()
-            # Change the cursor to return dictionaries
             cursor = self.connection.cursor(dictionary=True)
             sql = "SELECT * FROM quar"
             cursor.execute(sql)
             result = cursor.fetchall()
            
-            return result  # Ensure we're returning the fetched data
+            return result  
             
         except mysql.connector.Error as e:
-            print("Database error:", e)  # Print out the error if any
+            print("Database error:", e)  
         finally:
             self.closeAll()
 
@@ -71,6 +70,7 @@ class QuarantineDAO:
         print("update done")
         self.closeAll()
 
+    # updates the quar table based on the data provided by the operator when signing out the parts from quarantine
     def update_signout(self, lot, badgeout, dateout, signoutcomment):
         cursor = self.getCursor()
         sql = "UPDATE quar SET badgeout = %s, dateout = %s, signoutcomment = %s, status = 0 WHERE lot = %s"
@@ -80,7 +80,7 @@ class QuarantineDAO:
         self.closeAll()
 
 
-
+    # carries out delete functionality
     def delete(self, lot):
         cursor = self.getCursor()
         sql = "delete from quar where lot = %s"
@@ -90,10 +90,10 @@ class QuarantineDAO:
         print("delete done")
         self.closeAll()
 
+
     def getLotsWithStatus(self, status):
         try:
             cursor = self.getCursor()
-            # Change the cursor to return dictionaries
             cursor = self.connection.cursor(dictionary=True)
             sql = "SELECT * FROM quar WHERE status = %s"
             cursor.execute(sql, (status,))
@@ -104,10 +104,10 @@ class QuarantineDAO:
         finally:
             self.closeAll()
 
+    # searches the quar table using the string entered in the search box on the search page
     def search_records(self, search_query):
         cursor = self.getCursor()
         cursor = self.connection.cursor(dictionary=True)
-        # Modify the SQL query to search for records based on your database structure
         sql = "SELECT * FROM quar WHERE lot LIKE %s OR part LIKE %s"
         values = (f"%{search_query}%", f"%{search_query}%")
         cursor.execute(sql, values)
@@ -115,10 +115,10 @@ class QuarantineDAO:
         self.closeAll()
         return search_results
 
+    # pulls the operator name from a separate table in the database by checking badge number, returns dictionary
     def get_operator_data(self):
             try:
                 cursor = self.getCursor()
-                # Change the cursor to return dictionaries
                 cursor = self.connection.cursor(dictionary=True)
                 sql = "SELECT * FROM operator"
                 cursor.execute(sql)
