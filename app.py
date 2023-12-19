@@ -1,21 +1,24 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_bcrypt import Bcrypt
 from flask_httpauth import HTTPBasicAuth
-from quarantineDAO import QuarantineDAO  # Ensure this matches the name of your DAO file
-from datetime import datetime, timedelta
+from quarantineDAO import QuarantineDAO  # this is the data access object that was created to interact with the database
+from datetime import datetime, timedelta # timedelta is required to accomodate weekends in ount_lots_signed_out_last_2_days() - line 33
 import requests
 
 
+# initialize Flask application, bcrypt for password hashing, and HTTP auth
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 auth = HTTPBasicAuth()
 
+# dictionary with login credentials
 users = {
     'username': bcrypt.generate_password_hash('password').decode('utf-8')
 }
 
 dao = QuarantineDAO()
 
+# authentication function
 @auth.verify_password
 def verify_password(username, password):
     if username in users and bcrypt.check_password_hash(users.get(username), password):
@@ -100,8 +103,7 @@ def calculate_average_days(records):
     total_days = 0
     count = 0
     for record in records:
-        if record['datein']:  # Assuming 'datein' is already a date object
-            # No need to parse it, just calculate the difference
+        if record['datein']:
             date_in = record['datein']
             delta = datetime.now().date() - date_in
             total_days += delta.days
@@ -120,7 +122,7 @@ def count_lots_over_days(records, days=7):
     return count
 
 
-
+# Route for the main page, requires authentication
 @app.route('/')
 @auth.login_required
 
@@ -180,7 +182,7 @@ def edit_record(lot):
             'datein': request.form['datein'],
             'reason': request.form['reason'],
             'badge': request.form['badge']
-            # Add other fields as necessary
+            
         }
         dao.update(updated_values)
         return redirect(url_for('index'))
@@ -223,11 +225,6 @@ def search_records():
     if request.method == 'POST':
         search_query = request.form.get('search_query')
 
-        # Perform a database query to search for records based on the search query
-        # You can use SQL queries or any other search mechanism here
-
-        # For example, you can use your QuarantineDAO class to perform the search
-        # Replace this with your actual search logic
         search_results = dao.search_records(search_query)
 
         return render_template('search.html', search_results=search_results)
@@ -250,7 +247,7 @@ def view_record(lot):
 @app.route('/api/buildings')
 def get_buildings():
     # Query the database using the DAO to get the sum of quantities and count of lots for each building
-    buildings_data = dao.get_building_data()  # This is a new method you would create in your DAO
+    buildings_data = dao.get_building_data()  
 
     # Map the buildings to their static lat/lon values
     static_locations = {
@@ -281,11 +278,12 @@ def login():
         return redirect(url_for('protected'))
     else:
         return 'Login failed. Please try again.'
-    
+
+# route to pull in current weather in Seattle to display as a basic widget in page banner    
 @app.route('/get_weather_data')
 def get_weather_data():
-    latitude = 47.6062  # Use the correct latitude for your location
-    longitude = -122.3321  # Use the correct longitude for your location
+    latitude = 47.6062  # latitude of Boeing factory in Seattle
+    longitude = -122.3321  # longitude of Boeing factory
     endpoint = 'https://api.open-meteo.com/v1/forecast'
     params = {
         'latitude': latitude,
